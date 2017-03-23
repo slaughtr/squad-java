@@ -61,7 +61,7 @@ public class SquadTest {
   @Test
   public void addHero_addsHeroToSquad_true(){
     Squad testSquad = new Squad("Wu Tang Clan", "Get this money");
-    Hero testHero = new Hero("Robert Fitzgerald Diggs", "RZA", "Iron Fist", "C.R.E.A.M.", 100, 140);
+    Hero testHero = new Hero("RZA", "Robert Fitzgerald Diggs", "Iron Fist", "C.R.E.A.M.", 100, 140);
     testSquad.addHero(testHero);
     assertTrue(testSquad.getHeroes().contains(testHero));
   }
