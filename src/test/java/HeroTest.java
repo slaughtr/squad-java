@@ -67,4 +67,8 @@ public void find_returnsHeroWithSameId_myHero() {
   assertEquals(Hero.find(myHero.getId()), myHero);
 }
 
+@Test
+public void find_returnsNullwhenNoHeroFound_null(){
+  assertTrue(Hero.find(999) == null);
+}
 }

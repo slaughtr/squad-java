@@ -65,4 +65,21 @@ public class SquadTest {
     testSquad.addHero(testHero);
     assertTrue(testSquad.getHeroes().contains(testHero));
   }
+
+  @Test
+  public void calculateSquadStrength_returnsSumOfHeroesIntelAndStrength_int(){
+    Squad potatoSquad = new Squad("Potato Heads", "Keep All of their Parts");
+    Hero mrPotato = new Hero("Mr. Potato Head", "Spud Lee", "Interchangable body parts", "potato peelers", 4, 10);
+    Hero mrsPotato = new Hero("Mrs. Potato Head", "TatterAnn Lee", "Interchangable body parts", "missing eyes", 3, 12);
+    potatoSquad.addHero(mrPotato);
+    assertEquals(4, potatoSquad.getSquadStrength());
+    assertEquals(10, potatoSquad.getSquadIntel());
+    potatoSquad.addHero(mrsPotato);
+    assertEquals(7, potatoSquad.getSquadStrength());
+    assertEquals(22, potatoSquad.getSquadIntel());
+  }
+  @Test
+  public void find_returnsNullwhenNoSquadFound_null(){
+    assertTrue(Squad.find(999) == null);
+  }
 }

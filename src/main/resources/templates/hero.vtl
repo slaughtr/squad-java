@@ -1,11 +1,18 @@
-<h1>$hero.getHeroName()</h1>
-<h3>Secret Identity: $hero.getSecretIdentity()</h3>
-<h3>Squad: $squad.getName()</h3>
-<h3>Superpower: $hero.getSuperPower()</h3>
-<h3>Weakness: $hero.getWeakness()</h3>
-<h3>Strength: $hero.getStrengthValue()</h3>
-<h3>Intelligence: $hero.getIntelValue()</h3>
+#if ($squad.getHeroes().contains($hero))
+  <h1>$hero.getHeroName()</h1>
+  <h3>Secret Identity: $hero.getSecretIdentity()</h3>
+  <h3>Squad: $squad.getName()</h3>
+  <h4>Superpower: $hero.getSuperPower()</h4>
+  <h4>Weakness: $hero.getWeakness()</h4>
+  <h4>Strength: $hero.getStrengthValue()</h4>
+  <h4>Intelligence: $hero.getIntelValue()</h4>
+#else
+  <em><p>Oops! We can't seem to find that Hero.</p></em>
+#end
+<div class="buttonRow">
 
-<a href="/squads/$squad.getId()/heroes/new">Add another hero to this squad</a>
-<a href="/squads/$squad.getId()">Return to this squad</a>
-<a href="/squads">View all squads</a>
+
+  <a href="/squads/$squad.getId()/heroes/new"><button type="button" name="button" class="btn btn-success">Add another hero to this squad</button></a>
+  <a href="/squads/$squad.getId()"><button type="button" name="button" class="btn btn-warning">Return to this squad</button></a>
+  <a href="/squads"><button type="button" name="button" class="btn btn-info">View all squads</button></a>
+</div>

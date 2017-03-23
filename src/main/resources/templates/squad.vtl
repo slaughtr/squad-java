@@ -1,11 +1,17 @@
-<h1>$squad.getName() heroes:</h1>
-<h3>Goal: $squad.getGoal()</h3>
-
-<ul>
+#if ($squad)
+<h1>$squad.getName()</h1>
+<h2>Goal: $squad.getGoal()</h2>
+<h4>Cumulative Intelligence: $squad.getSquadIntel()</h4>
+<h4>Cumulative Strength: $squad.getSquadStrength()</h4>
+<br>
+</br>
   #foreach($hero in $squad.getHeroes())
-    <li><a href="/squads/$squad.getId()/heroes/$hero.getId()">$hero.getHeroName()</a></li>
+    <h3><a href="/squads/$squad.getId()/heroes/$hero.getId()">$hero.getHeroName()</a></h3>
   #end
-</ul>
-
-<a href="/squads/$squad.getId()/heroes/new">Add a new hero</a>
-<a href="/squads">All squads</a>
+#else
+<em><p>Oops! We can't seem to find that Squad.</p></em>
+#end
+<div class="buttonRow">
+  <a href="/squads/$squad.getId()/heroes/new"><button type="button" name="button" class="btn btn-success">Add a new hero</button></a>
+  <a href="/squads"><button type="button" name="button" class="btn btn-warning">All squads</button></a>
+</div>

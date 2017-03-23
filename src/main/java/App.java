@@ -7,7 +7,19 @@ import java.util.ArrayList;
 
 public class App {
   public static void main(String[] args) {
+    staticFileLocation("/public");
     String layout = "templates/layout.vtl";
+
+  Squad potatoSquad = new Squad("Potato Heads", "Keep All of their Parts");
+  Hero mrPotato = new Hero("Mr. Potato Head", "Spud Lee", "Interchangable body parts", "potato peelers", 4, 10);
+  Hero mrsPotato = new Hero("Mrs. Potato Head", "TatterAnn Lee", "Interchangable body parts", "missing eyes", 3, 12);
+  potatoSquad.addHero(mrPotato);
+  potatoSquad.addHero(mrsPotato);
+  Squad avengers = new Squad("The Avengers", "Protect human race from threats domestic and out of this world");
+  Hero cap = new Hero("Captain America", "Steve Rogers", "Super American", "All of his friends are dead", 89, 55);
+  avengers.addHero(cap);
+  Hero hulk = new Hero("The Incredible Hulk", "David Banner", "Big and Green", "Uncontrolable", 99, 6);
+  avengers.addHero(hulk);
 
   get("/", (request, response) -> {
     Map<String, Object> model = new HashMap<String, Object>();

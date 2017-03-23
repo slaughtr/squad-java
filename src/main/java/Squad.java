@@ -7,6 +7,8 @@ public class Squad {
   private static List<Squad> instances = new ArrayList<Squad>();
   private int mId;
   private List<Hero> mHeroes;
+  private int mSquadStrength;
+  private int mSquadIntel;
 
   public Squad(String name, String goal){
     mName = name;
@@ -14,6 +16,7 @@ public class Squad {
     instances.add(this);
     mId = instances.size();
     mHeroes = new ArrayList<Hero>();
+
   }
 
   public String getName(){
@@ -37,7 +40,11 @@ public class Squad {
   }
 
   public static Squad find(int id) {
-    return instances.get(id - 1);
+    try{
+      return instances.get(id - 1);
+    } catch (IndexOutOfBoundsException exception){
+      return null;
+    }
   }
 
   public List<Hero> getHeroes() {
@@ -46,5 +53,27 @@ public class Squad {
 
   public void addHero(Hero hero){
     mHeroes.add(hero);
+    (this).calculateSquadStrength();
+    (this).calculateSquadIntel();
+  }
+
+  public void calculateSquadStrength(){
+    mSquadStrength = 0;
+    for (Hero hero : mHeroes) {
+      mSquadStrength += hero.getStrengthValue();
+    }
+  }
+  public int getSquadStrength(){
+    return mSquadStrength;
+  }
+
+  public void calculateSquadIntel(){
+    mSquadIntel = 0;
+    for (Hero hero : mHeroes) {
+      mSquadIntel += hero.getIntelValue();
+    }
+  }
+  public int getSquadIntel(){
+    return mSquadIntel;
   }
 }

@@ -1,7 +1,11 @@
-<h1>Success!</h1>
+<h1>A new hero has been born</h1>
 
-Your hero has been added to the $squad.getName() squad.
+<p>
+  Your hero has been added to the $squad.getName() squad.
+</p>
+<div class="buttonRow">
 
-<a href="/squads/$squad.getId()/heroes/new">Add another hero to this squad</a>
-<a href="/squads/$squad.getId()">Return to this squad</a>
-<a href="/squads">View all squads</a>
+<a href="/squads/$squad.getId()/heroes/new"><button type="button" name="button" class="btn btn-success">Add another hero to this squad</button></a>
+<a href="/squads/$squad.getId()"><button type="button" name="button" class="btn btn-warning">Return to this squad</button></a>
+<a href="/squads"><button type="button" name="button" class="btn btn-info">View all squads</button></a>
+</div>

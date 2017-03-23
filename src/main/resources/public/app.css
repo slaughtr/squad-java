@@ -1,0 +1,32 @@
+.jumbotron {
+  color: white;
+  text-shadow: 3px 3px 0px black;
+  background-image: url(img/jumbo.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  text-align: center;
+  min-width: 400px;
+}
+
+
+.indexdiv {
+  margin-top: 40px;
+  min-height: 500px;
+  background-image: url(img/pow.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: block;
+  margin: auto;
+}
+
+a {
+  text-decoration: none;
+}
+.buttonRow {
+  display: block;
+  margin-top: 40px;
+}
+h1{
+  margin-bottom: 25px;
+}
