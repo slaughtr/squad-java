@@ -11,17 +11,19 @@ public class Hero {
   private int strength;
   private int intel;
   private int id;
+  private int squadId;
   // Map<String, String> colMaps = new HashMap<String, String>();
   // colMaps.put("name", "heroName");
   // sql2o.setDefaultColumnMappings(colMaps);
 
-  public Hero(String name, String secret_identity, String superpower, String weakness, int strength, int intel){
+  public Hero(String name, String secret_identity, String superpower, String weakness, int strength, int intel, int squadId){
     this.heroName = name;
     this.secret_identity = secret_identity;
     this.superpower = superpower;
     this.weakness = weakness;
     this.strength = strength;
     this.intel = intel;
+    this.squadId = squadId;
   }
 
   public String getHeroName(){
@@ -48,8 +50,11 @@ public class Hero {
     return intel;
   }
 
-  public static List<Hero> all(){
+  public int getSquadId() {
+    return squadId;
+  }
 
+  public static List<Hero> all(){
     String sql = "SELECT * FROM heroes";
     try(Connection con = DB.sql2o.open()) {
 
@@ -68,7 +73,7 @@ public class Hero {
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO heroes (name, secret_identity, superpower, weakness, strength, intel) VALUES (:name, :secret_identity, :superpower, :weakness, :strength, :intel)";
+      String sql = "INSERT INTO heroes (name, secret_identity, superpower, weakness, strength, intel, squadId) VALUES (:name, :secret_identity, :superpower, :weakness, :strength, :intel, :squadId)";
       this.id = (int) con.createQuery(sql, true)
       .addParameter("name", this.heroName)
       .addParameter("secret_identity", this.secret_identity)
@@ -76,6 +81,7 @@ public class Hero {
       .addParameter("weakness", this.weakness)
       .addParameter("strength", this.strength)
       .addParameter("intel", this.intel)
+      .addParameter("squadId", this.squadId)
       .executeUpdate()
       .getKey();
     }
@@ -100,7 +106,7 @@ public class Hero {
       return false;
     } else {
       Hero newHero = (Hero) otherHero;
-      return this.getHeroName().equals(newHero.getHeroName()) && this.getId() == newHero.getId();
+      return this.getHeroName().equals(newHero.getHeroName()) && this.getId() == newHero.getId() && this.getSquadId() == newHero.getSquadId();
 
     }
   }

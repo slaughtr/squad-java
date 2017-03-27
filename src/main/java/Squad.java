@@ -1,79 +1,94 @@
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
+import org.sql2o.*;
 
 public class Squad {
-  private String mName;
-  private String mGoal;
-  private static List<Squad> instances = new ArrayList<Squad>();
-  private int mId;
-  private List<Hero> mHeroes;
-  private int mSquadStrength;
-  private int mSquadIntel;
+  private String squadName;
+  private String squadGoal;
+  private int id;
+  private int squadStrength;
+  private int squadIntel;
 
   public Squad(String name, String goal){
-    mName = name;
-    mGoal = goal;
-    instances.add(this);
-    mId = instances.size();
-    mHeroes = new ArrayList<Hero>();
+    squadName = name;
+    squadGoal = goal;
 
   }
 
-  public String getName(){
-    return mName;
+  public String getSquadName(){
+    return squadName;
   }
 
   public String getGoal(){
-    return mGoal;
+    return squadGoal;
   }
 
   public static List<Squad> all(){
-    return instances;
+    String sql = "SELECT * FROM squads";
+    try(Connection con = DB.sql2o.open()) {
+      return con.createQuery(sql)
+      .addColumnMapping("name", "squadName")
+      .addColumnMapping("goal", "squadGoal")
+      .addColumnMapping("strength", "squadStrength")
+      .addColumnMapping("intel", "squadIntel")
+      .executeAndFetch(Squad.class);
+    }
   }
 
-  public static void clear(){
-    instances.clear();
+  public void save() {
+  try(Connection con = DB.sql2o.open()) {
+    String sql = "INSERT INTO squads (name) VALUES (:name)";
+    this.id = (int) con.createQuery(sql, true)
+      .addParameter("name", this.squadName)
+      .executeUpdate()
+      .getKey();
   }
+}
 
   public int getId(){
-    return mId;
+    return id;
   }
 
   public static Squad find(int id) {
-    try{
-      return instances.get(id - 1);
-    } catch (IndexOutOfBoundsException exception){
-      return null;
+      try(Connection con = DB.sql2o.open()) {
+        String sql = "SELECT * FROM squads where id=:id";
+        Squad squad = con.createQuery(sql)
+          .addParameter("id", id)
+          .addColumnMapping("name", "squadName")
+          .addColumnMapping("goal", "squadGoal")
+          .addColumnMapping("strength", "squadStrength")
+          .addColumnMapping("intel", "squadIntel")
+          .executeAndFetchFirst(Squad.class);
+        return squad;
+      }
     }
+    
+  public int getSquadStrength(){
+    return squadStrength;
+  }
+
+  public int getSquadIntel(){
+    return squadIntel;
   }
 
   public List<Hero> getHeroes() {
-    return mHeroes;
-  }
-
-  public void addHero(Hero hero){
-    mHeroes.add(hero);
-    (this).calculateSquadStrength();
-    (this).calculateSquadIntel();
-  }
-
-  public void calculateSquadStrength(){
-    mSquadStrength = 0;
-    for (Hero hero : mHeroes) {
-      mSquadStrength += hero.getStrengthValue();
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM heroes where squadId=:id";
+      return con.createQuery(sql)
+        .addParameter("id", this.id)
+        .addColumnMapping("name", "heroName")
+        .executeAndFetch(Hero.class);
     }
   }
-  public int getSquadStrength(){
-    return mSquadStrength;
-  }
 
-  public void calculateSquadIntel(){
-    mSquadIntel = 0;
-    for (Hero hero : mHeroes) {
-      mSquadIntel += hero.getIntelValue();
+  @Override
+  public boolean equals(Object otherSquad) {
+    if (!(otherSquad instanceof Squad)) {
+      return false;
+    } else {
+      Squad newSquad = (Squad) otherSquad;
+      return this.getSquadName().equals(newSquad.getSquadName()) && this.getId() == newSquad.getId();
     }
-  }
-  public int getSquadIntel(){
-    return mSquadIntel;
   }
 }
