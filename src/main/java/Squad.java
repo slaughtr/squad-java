@@ -38,9 +38,10 @@ public class Squad {
 
   public void save() {
   try(Connection con = DB.sql2o.open()) {
-    String sql = "INSERT INTO squads (name) VALUES (:name)";
+    String sql = "INSERT INTO squads (name, goal) VALUES (:name, :goal)";
     this.id = (int) con.createQuery(sql, true)
       .addParameter("name", this.squadName)
+      .addParameter("goal", this.squadGoal)
       .executeUpdate()
       .getKey();
   }
@@ -63,7 +64,7 @@ public class Squad {
         return squad;
       }
     }
-    
+
   public int getSquadStrength(){
     return squadStrength;
   }

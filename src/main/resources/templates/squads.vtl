@@ -1,7 +1,7 @@
 <h1>All Squads</h1>
 
 #foreach ($squad in $squads)
-  <h4><a href="/squads/$squad.getId()">$squad.getName()</a></h4><br>
+  <h4><a href="/squads/$squad.getId()">$squad.getSquadName()</a></h4><br>
 #end
 <div class="buttonRow">
   <a href="/squads/new">
