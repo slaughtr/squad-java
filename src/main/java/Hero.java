@@ -1,66 +1,107 @@
-import java.util.ArrayList;
 import java.util.List;
+import org.sql2o.*;
+import java.util.HashMap;
+
 
 public class Hero {
-  private String mHeroName;
-  private String mSecretIdentity;
-  private String mSuperPower;
-  private String mWeakness;
-  private int mStrengthValue;
-  private int mIntelValue;
-  private static List<Hero> instances = new ArrayList<Hero>();
-  private int mId;
+  private String heroName;
+  private String secret_identity;
+  private String superpower;
+  private String weakness;
+  private int strength;
+  private int intel;
+  private int id;
+  // Map<String, String> colMaps = new HashMap<String, String>();
+  // colMaps.put("name", "heroName");
+  // sql2o.setDefaultColumnMappings(colMaps);
 
-  public Hero(String heroName, String secretIdentity, String superPower, String weakness, int strengthValue, int intelValue){
-    mHeroName = heroName;
-    mSecretIdentity = secretIdentity;
-    mSuperPower = superPower;
-    mWeakness = weakness;
-    mStrengthValue = strengthValue;
-    mIntelValue = intelValue;
-    instances.add(this);
-    mId = instances.size();
+  public Hero(String name, String secret_identity, String superpower, String weakness, int strength, int intel){
+    this.heroName = name;
+    this.secret_identity = secret_identity;
+    this.superpower = superpower;
+    this.weakness = weakness;
+    this.strength = strength;
+    this.intel = intel;
   }
 
   public String getHeroName(){
-    return mHeroName;
+    return heroName;
   }
 
   public String getSecretIdentity(){
-    return mSecretIdentity;
+    return secret_identity;
   }
 
   public String getSuperPower(){
-    return mSuperPower;
+    return superpower;
   }
 
   public String getWeakness(){
-    return mWeakness;
+    return weakness;
   }
 
   public int getStrengthValue(){
-    return mStrengthValue;
+    return strength;
   }
 
   public int getIntelValue(){
-    return mIntelValue;
+    return intel;
   }
 
   public static List<Hero> all(){
-    return instances;
+
+    String sql = "SELECT * FROM heroes";
+    try(Connection con = DB.sql2o.open()) {
+
+      return con.createQuery(sql)
+      //pulling information from the database, maps info from column called "name" to class variable "heroName"
+      .addColumnMapping("name", "heroName")
+      .executeAndFetch(Hero.class);
+    }
   }
 
-  public static void clear(){
-    instances.clear();
-  }
+
   public int getId(){
-    return mId;
+    return id;
   }
-  public static Hero find(int id){
-    try{
-      return instances.get(id - 1);
-    } catch (IndexOutOfBoundsException exception) {
-      return null;
+
+
+  public void save() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "INSERT INTO heroes (name, secret_identity, superpower, weakness, strength, intel) VALUES (:name, :secret_identity, :superpower, :weakness, :strength, :intel)";
+      this.id = (int) con.createQuery(sql, true)
+      .addParameter("name", this.heroName)
+      .addParameter("secret_identity", this.secret_identity)
+      .addParameter("superpower", this.superpower)
+      .addParameter("weakness", this.weakness)
+      .addParameter("strength", this.strength)
+      .addParameter("intel", this.intel)
+      .executeUpdate()
+      .getKey();
+    }
+  }
+
+  public static Hero find(int id) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM heroes WHERE id = :id";
+      Hero hero = con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("id", id)
+        //pulling information from the database, maps info from column called "name" to class variable "heroName"
+        .addColumnMapping("name", "heroName")
+        .executeAndFetchFirst(Hero.class);
+      return hero;
+    }
+  }
+
+  @Override
+  public boolean equals(Object otherHero) {
+    if (!(otherHero instanceof Hero)) {
+      return false;
+    } else {
+      Hero newHero = (Hero) otherHero;
+      return this.getHeroName().equals(newHero.getHeroName()) && this.getId() == newHero.getId();
+
     }
   }
 }

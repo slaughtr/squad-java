@@ -1,9 +1,23 @@
+import org.sql2o.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
 public class HeroTest {
 
 Hero testHero = new Hero("Hero Name", "Secret Identity", "Super Power", "Weakness", 0, 90);
+
+@Before
+ public void setUp() {
+   DB.sql2o = new Sql2o("jdbc:postgresql://localhost:5432/squad_test", null, null);
+ }
+
+ @After
+public void tearDown() {
+  try(Connection con = DB.sql2o.open()) {
+    String sql = "DELETE FROM heroes *;";
+    con.createQuery(sql).executeUpdate();
+  }
+}
 
 @Test
 public void Hero_instantiatesCorrectly_true() {
@@ -42,33 +56,35 @@ public void Hero_instantiatesWithIntelValue_int() {
 }
 
 @Test
-public void all_returnsAllInstancesofHero_true() {
-  Hero testHero2 = new Hero("Hero 2 Name", "Secret Identity", "Super Power", "Weakness", 0, 90);
-  assertEquals(true, Hero.all().contains(testHero));
-  assertEquals(true, Hero.all().contains(testHero2));
-}
-@Test
-public void clear_emptiesAllInstancesofHerofromArrayList_true() {
-  Hero testHero2 = new Hero("Hero 2 Name", "Secret Identity", "Super Power", "Weakness", 0, 90);
-  Hero.clear();
-  assertEquals(0, Hero.all().size());
-}
-@Test
-public void getId_heroInstantiatesWithID_1() {
-  Hero.clear();
+public void save_returnsTrueIfHeroNameAretheSame() {
   Hero myHero = new Hero("Hero Name", "Secret Identity", "Super Power", "Weakness", 0, 90);
-  assertEquals(1, myHero.getId());
-}
-@Test
-public void find_returnsHeroWithSameId_myHero() {
-  Hero.clear();
-  Hero myHero = new Hero("Hero Name", "Secret Identity", "Super Power", "Weakness", 0, 90);
-  Hero myHero2 = new Hero("Hero Name", "Secret Identity", "Super Power", "Weakness", 0, 90);
-  assertEquals(Hero.find(myHero.getId()), myHero);
+  myHero.save();
+  assertTrue(Hero.all().get(0).equals(myHero));
 }
 
 @Test
-public void find_returnsNullwhenNoHeroFound_null(){
-  assertTrue(Hero.find(999) == null);
-}
+public void all_returnsAllInstancesOfHero_true(){
+  Hero firstHero = new Hero("Hero Name", "Secret Identity", "Super Power", "Weakness", 0, 90);
+  firstHero.save();
+  Hero secondHero = new Hero("Second Hero Name", "Secret Identity", "Super Power", "Weakness", 0, 90);
+  secondHero.save();
+  assertEquals(true, Hero.all().get(0).equals(firstHero));
+  assertEquals(true, Hero.all().get(1).equals(secondHero));
+  }
+
+  @Test
+  public void getId_heroesInstantiateWithAnID(){
+    Hero firstHero = new Hero("Hero Name", "Secret Identity", "Super Power", "Weakness", 0, 90);
+    firstHero.save();
+    assertTrue(firstHero.getId() >0);
+  }
+
+  @Test
+  public void find_returnsHeroWithSameId_secondHero() {
+    Hero firstHero = new Hero("Hero Name", "Secret Identity", "Super Power", "Weakness", 0, 90);
+    firstHero.save();
+    Hero secondHero = new Hero("Second Hero Name", "Secret Identity", "Super Power", "Weakness", 0, 90);
+    secondHero.save();
+    assertEquals(Hero.find(secondHero.getId()), secondHero);
+  }
 }
